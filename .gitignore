@@ -1,0 +1,13 @@
+# Angular
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/cache
+
+# .NET
+backend/bin/
+backend/obj/
+
+# IDEs
+.vscode/
+*.suo
+*.user
