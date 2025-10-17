@@ -4,20 +4,20 @@ namespace backend.Models;
 
     public class Appointment
     {
-        private int Id { get; set; }
-        private DateTime DateCreated { get; set; }
-        private int UserId { get; set; }
-        private IdentityUser User { get; set; } = null!;
-        private DateTime StartTime { get; set; }
-        private DateTime ExpectedEndTime { get; set; }
-        private DateTime? EndTime { get; set; }
-        private int PriceExpected { get; set; }
-        private int? PriceActual { get; set; }
-        private int? Discount { get; set; }
-        private bool Canceled { get; set; }= false;
-        private string? CancellationReason { get; set; }
+        public int Id { get; set; }
+        public DateTime DateCreated { get; set; }
+        public int UserId { get; set; }
+        public ApplicationUser User { get; set; } = null!;
+        public DateTime StartTime { get; set; }
+        public DateTime ExpectedEndTime { get; set; }
+        public DateTime? EndTime { get; set; }
+        public int PriceExpected { get; set; }
+        public int? PriceActual { get; set; }
+        public int? Discount { get; set; }
+        public bool Canceled { get; set; }= false;
+        public string? CancellationReason { get; set; }
 
-        private ICollection<ServiceProvided> ServicesProvided { get; set; } = new List<ServiceProvided>();
-        private ICollection<ServiceBooked> ServicesBooked { get; set; } = new List<ServiceBooked>();
-        
+        public ICollection<ServiceProvided> ServicesProvided { get; set; } = new List<ServiceProvided>();
+        public ICollection<ServiceBooked> ServicesBooked { get; set; } = new List<ServiceBooked>();
+
     }
