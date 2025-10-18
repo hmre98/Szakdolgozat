@@ -6,7 +6,10 @@ public class Service
     public string Name { get; set; } = string.Empty;
     public decimal Price { get; set; }
 
+    public int DurationMinutes { get; set; }
+
     public ICollection<ServiceProvided> ServicesProvided { get; set; } = new List<ServiceProvided>();
     public ICollection<ServiceBooked> ServicesBooked { get; set; } = new List<ServiceBooked>();
+    public ICollection<ServiceDuration> Durations { get; set; } = new List<ServiceDuration>();
 
 }

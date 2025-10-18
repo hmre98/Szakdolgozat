@@ -9,6 +9,19 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
+protected override void OnModelCreating(ModelBuilder builder)
+{
+    base.OnModelCreating(builder);
+
+    builder.Entity<Appointment>()
+        .HasOne(a => a.User)
+        .WithMany() // or .WithMany(u => u.Appointments) if you add a collection
+        .HasForeignKey(a => a.UserId)
+        .IsRequired()
+        .OnDelete(DeleteBehavior.Cascade);
+}
+
+
     public DbSet<Appointment> Appointments { get; set; } = null!;
     public DbSet<Service> Services { get; set; } = null!;
     public DbSet<ServiceBooked> ServicesBooked { get; set; } = null!;
