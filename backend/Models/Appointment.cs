@@ -10,10 +10,7 @@ namespace backend.Models;
         public ApplicationUser User { get; set; } = null!;
         public DateTime StartTime { get; set; }
         public DateTime ExpectedEndTime { get; set; }
-        public DateTime? EndTime { get; set; }
         public int PriceExpected { get; set; }
-        public int? PriceActual { get; set; }
-        public int? Discount { get; set; }
         public bool Canceled { get; set; }= false;
         public string? CancellationReason { get; set; }
 

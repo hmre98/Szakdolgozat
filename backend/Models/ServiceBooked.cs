@@ -9,4 +9,7 @@ public class ServiceBooked
     public int ServiceId { get; set; }
     public Service Service { get; set; } = null!;
     public int Price { get; set; }  
+
+    public int? ChosenMaterialId { get; set; }
+    public Material? ChosenMaterial { get; set; }
 }
