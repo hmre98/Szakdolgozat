@@ -5,8 +5,7 @@ using backend.Services;
 using backend.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authentication.JwtBearer;  
-using Microsoft.IdentityModel.Tokens;                 
+using Microsoft.AspNetCore.Authentication.JwtBearer;                
 using System.Text;                                    
 using backend.Models;
 
@@ -16,6 +15,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
+builder.Services.AddScoped<IMaterialRepository, MaterialRepository>();
+builder.Services.AddScoped<IMaterialService, MaterialService>();
+builder.Services.AddScoped<IServiceCategoryRepository, ServiceCategoryRepository>();
+builder.Services.AddScoped<IServiceDurationRepository, ServiceDurationRepository>();
+
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

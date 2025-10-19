@@ -15,7 +15,7 @@ protected override void OnModelCreating(ModelBuilder builder)
 
     builder.Entity<Appointment>()
         .HasOne(a => a.User)
-        .WithMany() // or .WithMany(u => u.Appointments) if you add a collection
+        .WithMany() 
         .HasForeignKey(a => a.UserId)
         .IsRequired()
         .OnDelete(DeleteBehavior.Cascade);
@@ -26,4 +26,8 @@ protected override void OnModelCreating(ModelBuilder builder)
     public DbSet<Service> Services { get; set; } = null!;
     public DbSet<ServiceBooked> ServicesBooked { get; set; } = null!;
     public DbSet<ServiceProvided> ServicesProvided { get; set; } = null!;   
+    public DbSet<ServiceCategory> ServiceCategories { get; set; } = null!;
+    public DbSet<ServiceDuration> ServiceDurations { get; set; } = null!;
+    public DbSet<Material> Materials { get; set; } = null!;
+    public DbSet<ServiceMaterial> ServiceMaterials { get; set; } = null!;
 }
