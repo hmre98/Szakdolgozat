@@ -7,7 +7,7 @@ namespace backend.Models
         public string FirstName { get; set; }=null!;
         public string LastName { get; set; }=null!;
 
-        public ICollection<ServiceBooked> ServicesBooked { get; set; } = new List<ServiceBooked>();
+        public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
 
 
     }

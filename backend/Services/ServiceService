@@ -1,0 +1,69 @@
+namespace backend.Services;
+
+public class ServiceService : IServiceService
+{
+    private readonly IServiceRepository _serviceRepository;
+    private readonly IServiceDurationRepository _durationRepository;
+    private readonly IServiceCategoryRepository _categoryRepository;
+
+    public ServiceService(
+        IServiceRepository serviceRepository,
+        IServiceDurationRepository durationRepository,
+        IServiceCategoryRepository categoryRepository)
+    {
+        _serviceRepository = serviceRepository;
+        _durationRepository = durationRepository;
+        _categoryRepository = categoryRepository;
+    }
+
+    public async Task<Service?> GetServiceAsync(int id)
+    {
+        var service = await _serviceRepository.GetServiceWithMaterialsAsync(id);
+        if (service == null)
+            return null;
+
+        // Load durations
+        service.Durations = (await _durationRepository.GetByServiceIdAsync(service.Id)).ToList();
+
+        // Load category
+        service.Category = await _categoryRepository.GetByIdAsync(service.CategoryId);
+
+        return service;
+    }
+
+    public async Task<IEnumerable<Service>> GetAvailableServicesAsync()
+    {
+        var services = await _serviceRepository.GetAllActiveAsync();
+
+        // optionally populate durations & categories
+        foreach (var service in services)
+        {
+            service.Durations = (await _durationRepository.GetByServiceIdAsync(service.Id)).ToList();
+            service.Category = await _categoryRepository.GetByIdAsync(service.CategoryId);
+        }
+
+        return services;
+    }
+
+    public async Task<bool> CanBookServiceAsync(int serviceId)
+    {
+        var service = await _serviceRepository.GetServiceWithMaterialsAsync(serviceId);
+        if (service == null || !service.IsActive)
+            return false;
+
+        foreach (var sm in service.Materials)
+        {
+            if (sm.Material != null && !sm.Material.InInventory)
+                return false;
+        }
+
+        return true;
+    }
+
+    // New helpers for durations & categories
+    public async Task<IEnumerable<ServiceDuration>> GetServiceDurationsAsync(int serviceId) =>
+        await _durationRepository.GetByServiceIdAsync(serviceId);
+
+    public async Task<ServiceCategory?> GetCategoryAsync(int categoryId) =>
+        await _categoryRepository.GetByIdAsync(categoryId);
+}

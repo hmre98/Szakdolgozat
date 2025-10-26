@@ -7,6 +7,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using backend.Models;
+using backend.Contracts.Services;
+using backend.Contracts.Repository;
 
 namespace backend.Services
 {
@@ -25,8 +27,10 @@ namespace backend.Services
 
         public async Task<IEnumerable<UserDTO>> GetUsers(PaginationDTO pagination)
         {
-            var users = await userRepository.GetAllAsync();
-            return mapper.Map<IEnumerable<UserDTO>>(users);
+            var users = await userRepository.GetAllAsync(pagination);
+
+            var userDTOs = mapper.Map<List<UserDTO>>(users);
+            return userDTOs;
         }
 
         public async Task<AuthenticationResponseDTO> Register(UserCredentialsDTO userCredentials)

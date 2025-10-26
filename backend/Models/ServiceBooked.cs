@@ -10,6 +10,8 @@ public class ServiceBooked
     public Service Service { get; set; } = null!;
     public int Price { get; set; }  
 
-    public int? ChosenMaterialId { get; set; }
-    public Material? ChosenMaterial { get; set; }
+    int DurationId { get; set; }
+    public ServiceDuration Duration { get; set; } = null!;
+
+    public ICollection<ServiceBookedMaterial>? Materials { get; set; } = new List<ServiceBookedMaterial>();
 }

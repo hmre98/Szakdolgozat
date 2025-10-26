@@ -1,8 +1,9 @@
 using backend.DTOs;
 using backend.Models;
-using backend.Services;
+using backend.Contracts.Services;
 using backend.Utilities;
 using Microsoft.AspNetCore.Mvc;
+using backend.Enums;
 
 namespace backend.Controllers;
 
@@ -17,76 +18,42 @@ public class MaterialController : ControllerBase
         _materialService = materialService;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] PaginationDTO pagination)
+    [HttpGet("GetAllMaterials")]
+    public async Task<ActionResult<IEnumerable<MaterialDTO>>> GetAllMaterialsAsync(int pageNumber, int pageSize, string sortColumn, SortDirection sortDirection)
     {
-
-        var allMaterials = await _materialService.GetAllAsQueryableAsync();
-
-
-        var pagedMaterials = allMaterials.Paginate(pagination).ToList();
-
-        var dtos = pagedMaterials.Select(m => new MaterialDTO
-        {
-            Id = m.Id,
-            Name = m.Name,
-            InInventory = m.InInventory
-        });
-
-        return Ok(dtos);
+        var materials = await _materialService.GetAllMaterialsAsync(pageNumber, pageSize, sortColumn, sortDirection);
+        return Ok(materials);
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> Get(int id)
+
+    [HttpPost("InsertMaterial")]
+    public async Task<IActionResult> InsertMaterialAsync([FromBody] MaterialDTO dto)
     {
-        var material = await _materialService.GetMaterialAsync(id);
-        if (material == null) return NotFound();
-
-        var dto = new MaterialDTO
-        {
-            Id = material.Id,
-            Name = material.Name,
-            InInventory = material.InInventory
-        };
-
-        return Ok(dto);
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] MaterialDTO dto)
-    {
-        var material = new Material
-        {
-            Name = dto.Name,
-            InInventory = dto.InInventory
-        };
-
-        await _materialService.AddMaterialAsync(material);
-        dto.Id = material.Id;
-
-        return CreatedAtAction(nameof(Get), new { id = dto.Id }, dto);
+        var id = await _materialService.AddMaterialAsync(dto);
+        return Ok(id);
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, [FromBody] MaterialDTO dto)
     {
-        if (id != dto.Id) return BadRequest();
+         var result = await _materialService.UpdateMaterialByIdAsync(id, dto);
 
-        var material = await _materialService.GetMaterialAsync(id);
-        if (material == null) return NotFound();
-
-        material.Name = dto.Name;
-        material.InInventory = dto.InInventory;
-
-        await _materialService.UpdateMaterialAsync(material);
-
-        return NoContent();
+         if(result == 0)
+         {
+             return NotFound();
+         }
+         return Ok(id);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("DeleteMaterial/{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        await _materialService.DeleteMaterialAsync(id);
-        return NoContent();
+        var result = await _materialService.DeleteMaterialAsync(id);
+
+        if(result == 0)
+        {
+            return NotFound();
+        }
+        return Ok(id);
     }
 }

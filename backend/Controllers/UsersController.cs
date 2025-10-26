@@ -18,7 +18,7 @@ namespace backend.Controllers
 
         [HttpGet("usersList")]
         //[Authorize(Policy = "isadmin")]
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers([FromQuery] PaginationDTO paginationDTO)
         {
             var users = await userService.GetUsers(paginationDTO);

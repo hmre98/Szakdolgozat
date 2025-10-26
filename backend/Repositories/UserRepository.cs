@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using backend.Models;
+using backend.DTOs;
+using Microsoft.EntityFrameworkCore;
+using backend.Contracts.Repository;
 
 namespace backend.Repositories
 {
@@ -38,10 +41,21 @@ namespace backend.Repositories
             await _userManager.RemoveClaimAsync(user, claim);
         }
 
-        public async Task<IList<ApplicationUser>> GetAllAsync()
+        public async Task<IList<ApplicationUser>> GetAllAsync(PaginationDTO pagination)
         {
-            return _userManager.Users.ToList();
+            var query = _userManager.Users
+                               .OrderBy(u => u.UserName)
+                               .Skip((pagination.Page - 1) * pagination.RecordsPerPage)
+                               .Take(pagination.RecordsPerPage)
+                               .ToListAsync();
+
+            return await query;
         }
+        
+         public async Task<int> GetTotalCountAsync()
+            {
+                return await _userManager.Users.CountAsync();
+            }
 
         public async Task<bool> CheckPasswordAsync(ApplicationUser user, string password)
         {
